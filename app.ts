@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { connectToDb } from './dbConnection';
 // const cors = require('cors');
 
-import { signInHandler } from './handlers';
+import { signInHandler, signUpHandler } from './handlers';
 
 dotenv.config();
 
@@ -21,6 +21,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/sign-in', signInHandler);
+
+app.post('/sign-up', signUpHandler)
 
 app.listen(port, () => {
   console.log(`[server] Server is running at http://localhost:${port}`);

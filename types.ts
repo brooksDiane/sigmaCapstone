@@ -1,4 +1,6 @@
-export interface SignInData {
-  isSuccessful: boolean;
-  errorMessage: string;
+export interface UserData {
+  firstname: string;
+  lastname?: string;
+  email: string;
+  password: string;
 }
