@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { users } from './dbConnection';
-import { UserData } from './types';
+import { UserPostData, UserExtData } from './types';
 import { ObjectId } from 'mongodb';
 
 export async function signInHandler(req: Request, res: Response) {
@@ -18,9 +18,10 @@ export async function signInHandler(req: Request, res: Response) {
 }
 
 export async function signUpHandler(req: Request, res: Response) {
-  const userData: UserData = req.body;
+  const userData: UserPostData = req.body;
+
   try {
-    const result = await users.insertOne(userData);
+    const result = await users.insertOne(extendUserData(userData));
     if (result) {
       res.json(newAuthResponse(true, null, result.insertedId));
     }
@@ -37,4 +38,15 @@ function newAuthResponse(isSuccessful: boolean, error: any, _id: ObjectId | null
     errorMsg = error.message;
   }
   return { isSuccessful, errorMsg, _id };
+}
+
+function extendUserData(data: UserPostData) {
+  const extendedData: UserExtData = {
+    ...data,
+    titles: {
+      series: [],
+      movies: [],
+    },
+  };
+  return extendedData;
 }
