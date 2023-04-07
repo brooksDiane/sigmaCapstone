@@ -1,15 +1,35 @@
 import express, { Express, Response, Request } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { connectToDb } from './dbConnection';
 
-import { signInHandler, signUpHandler } from './authHandlers';
+import { signInHandler, signUpHandler } from './handlers/authHandlers';
 import {
-  addMovieHandler,
-  addSeriesHandler,
   getMoviesHandler,
   getSeriesHandler,
   getTitlesHandler,
-} from './titleHandlers';
+  getOneMovie,
+  getOneSeries,
+} from './handlers/getTitleHandlers';
+import {
+  addEpisodeHandler,
+  addMovieHandler,
+  addSeriesHandler,
+} from './handlers/addTitleHandlers';
+
+import path from 'path';
+import multer from 'multer';
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'files/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+var upload = multer({ storage: storage });
 
 dotenv.config();
 
@@ -20,7 +40,7 @@ connectToDb();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cors());
+app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
@@ -30,12 +50,16 @@ app.post('/sign-in', signInHandler);
 
 app.post('/sign-up', signUpHandler);
 
-app.get('/get-series/:id', getSeriesHandler);
-app.get('/get-movies/:id', getMoviesHandler);
-app.get('/get-titles/:id', getTitlesHandler);
+app.get('/get-series/:userId', getSeriesHandler);
+app.get('/get-movies/:userId', getMoviesHandler);
+app.get('/get-titles/:userId', getTitlesHandler);
 
-app.post('/add-series/:id', addSeriesHandler);
-app.post('/add-movie/:id', addMovieHandler);
+app.get('/series/:userId/:titleId', getOneSeries);
+app.get('/movie/:userId/:titleId', getOneMovie);
+
+app.post('/add-series/:userId', addSeriesHandler);
+app.post('/add-series/:userId/episode', upload.single('file'), addEpisodeHandler);
+app.post('/add-movie/:userId', upload.single('file'), addMovieHandler);
 
 app.listen(port, () => {
   console.log(`[server] Server is running at http://localhost:${port}`);

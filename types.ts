@@ -31,6 +31,17 @@ interface Title {
   title: string;
 }
 
-export interface Movie extends Title {}
+interface VideoFile {
+  size: number;
+  format: string;
+  url: string;
+}
+
+export interface Movie extends Title, VideoFile {}
 
 export interface Series extends Title {}
+
+export interface Episode extends VideoFile {
+  seasonNum: number;
+  episodeNum: number;
+}

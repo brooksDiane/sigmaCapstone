@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
-import { users } from './dbConnection';
-import { UserPostData, UserExtData } from './types';
+import { users } from '../dbConnection';
+import { UserPostData, UserExtData } from '../types';
 import { ObjectId } from 'mongodb';
 
 export async function signInHandler(req: Request, res: Response) {
