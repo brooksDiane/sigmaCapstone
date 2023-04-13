@@ -29,12 +29,16 @@ export interface UserDocument extends UserExtData {
 
 interface Title {
   title: string;
+  genres: string[];
+  year: number;
+  duration: number;
 }
 
 interface VideoFile {
   size: number;
   format: string;
   url: string;
+  mimetype: string;
 }
 
 export interface Movie extends Title, VideoFile {}

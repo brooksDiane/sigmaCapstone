@@ -12,6 +12,7 @@ import {
   getOneSeries,
 } from './handlers/getTitleHandlers';
 import {
+  addCoverHandler,
   addEpisodeHandler,
   addMovieHandler,
   addSeriesHandler,
@@ -28,6 +29,8 @@ var storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
+
+// var storage = multer.memoryStorage();
 
 var upload = multer({ storage: storage });
 
@@ -60,6 +63,7 @@ app.get('/movie/:userId/:titleId', getOneMovie);
 app.post('/add-series/:userId', addSeriesHandler);
 app.post('/add-series/:userId/episode', upload.single('file'), addEpisodeHandler);
 app.post('/add-movie/:userId', upload.single('file'), addMovieHandler);
+app.put('/add-cover/:titleId', upload.single('file'), addCoverHandler);
 
 app.listen(port, () => {
   console.log(`[server] Server is running at http://localhost:${port}`);
