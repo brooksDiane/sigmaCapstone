@@ -8,7 +8,7 @@ import {
   getMoviesHandler,
   getSeriesHandler,
   getTitlesHandler,
-  getOneMovie,
+  getMovieHandler,
   getOneSeries,
 } from './handlers/getTitleHandlers';
 import {
@@ -58,7 +58,7 @@ app.get('/get-movies/:userId', getMoviesHandler);
 app.get('/get-titles/:userId', getTitlesHandler);
 
 app.get('/series/:userId/:titleId', getOneSeries);
-app.get('/movie/:userId/:titleId', getOneMovie);
+app.get('/movie/:userId/:titleId', getMovieHandler);
 
 app.post('/add-series/:userId', addSeriesHandler);
 app.post('/add-series/:userId/episode', upload.single('file'), addEpisodeHandler);

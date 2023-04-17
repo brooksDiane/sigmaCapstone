@@ -59,16 +59,21 @@ async function findMoviesArray(user: UserDocument) {
       _id: new ObjectId(movieId),
     });
     if (returnedMovie !== null) {
+      console.log(returnedMovie);
       moviesArray.push({
         id: movieId,
         title: returnedMovie.title,
+        genres: returnedMovie.genres,
+        year: returnedMovie.year,
+        size: returnedMovie.size,
+        cover: returnedMovie.cover
       });
     }
   }
   return moviesArray;
 }
 
-export async function getOneMovie(req: Request, res: Response) {
+export async function getMovieHandler(req: Request, res: Response) {
   const user = await findUserById(req.params.userId);
   if (user === null) {
     res.json({ error: 'No such user exists | Wrong user ID' });
@@ -79,4 +84,4 @@ export async function getOneMovie(req: Request, res: Response) {
   }
 }
 
-export async function getOneSeries(req: Request, res: Response) {}
+export async function getOneSeries(req: Request, res: Response) { }

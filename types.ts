@@ -31,7 +31,10 @@ interface Title {
   title: string;
   genres: string[];
   year: number;
-  duration: number;
+  cover: {
+    mimetype: string;
+    url: string;
+  }
 }
 
 interface VideoFile {
@@ -41,9 +44,9 @@ interface VideoFile {
   mimetype: string;
 }
 
-export interface Movie extends Title, VideoFile {}
+export interface Movie extends Title, VideoFile { }
 
-export interface Series extends Title {}
+export interface Series extends Title { }
 
 export interface Episode extends VideoFile {
   seasonNum: number;
