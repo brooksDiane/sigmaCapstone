@@ -4,11 +4,6 @@ import { Movie, Series, Episode } from '../types';
 import { ObjectId } from 'mongodb';
 import fs from 'fs';
 
-import { v2 as cloudinary } from 'cloudinary';
-cloudinary.config({
-  secure: true,
-});
-
 export async function addSeriesHandler(req: Request, res: Response) {
   const newSeries: Series = req.body;
   const insertResult = await series.insertOne(newSeries);
@@ -54,19 +49,12 @@ export async function addMovieHandler(req: Request, res: Response) {
 async function uploadFile(req: Request) {
   try {
     const file = req.file!;
-    const filePath = __dirname + '\\..\\' + file.path;
-    const result = await cloudinary.uploader.upload(filePath, {
-      resource_type: 'video',
-    });
+    const filePath = correctDirname() + file.path;
     const metadata = {
       mimetype: file.mimetype,
-      format: result.format,
-      size: result.bytes,
-      url: result.secure_url,
+      size: file.size,
+      url: filePath,
     };
-
-    fs.unlinkSync(filePath);
-
     return metadata;
   } catch (error) {
     console.error(error);
@@ -94,22 +82,23 @@ export async function addCoverHandler(req: Request, res: Response) {
 async function uploadCover(req: Request) {
   try {
     const file = req.file!;
-    const filePath = __dirname + '\\..\\' + file.path;
-    const result = await cloudinary.uploader.upload(filePath, {
-      resource_type: 'image',
-    });
+    const filePath = correctDirname() + file.path;
     const coverData = {
       mimetype: file.mimetype,
-      url: result.secure_url,
+      url: filePath,
     };
-
-    fs.unlinkSync(filePath);
 
     return coverData;
   } catch (error) {
     console.error(error);
   }
 }
+
+function correctDirname() {
+  let dirname = __dirname;
+  return dirname.slice(0, dirname.search('handlers'));
+}
+
 
 // // import fetch from 'node-fetch';
 
