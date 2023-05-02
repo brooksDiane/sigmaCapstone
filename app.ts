@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectToDb } from './dbConnection';
 
-import { signInHandler, signUpHandler } from './handlers/authHandlers';
+import { getUserHandler, signInHandler, signUpHandler } from './handlers/authHandlers';
 import {
   getMoviesHandler,
   getSeriesHandler,
@@ -52,8 +52,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/sign-in', signInHandler);
-
 app.post('/sign-up', signUpHandler);
+app.get('/user/:userId', getUserHandler);
 
 app.get('/get-series/:userId', getSeriesHandler);
 app.get('/get-movies/:userId', getMoviesHandler);

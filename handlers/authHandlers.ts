@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { users } from '../dbConnection';
+import { users, findUserById } from '../dbConnection';
 import { UserPostData, UserExtData } from '../types';
 import { ObjectId } from 'mongodb';
 
@@ -49,4 +49,13 @@ function extendUserData(data: UserPostData) {
     },
   };
   return extendedData;
+}
+
+export async function getUserHandler(req: Request, res: Response) {
+  const user = await findUserById(req.params.userId);
+  res.json({
+    firstname: user?.firstname,
+    lastname: user?.lastname,
+    email: user?.email,
+  })
 }
