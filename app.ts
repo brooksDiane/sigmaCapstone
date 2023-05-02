@@ -10,6 +10,8 @@ import {
   getTitlesHandler,
   getMovieHandler,
   getOneSeries,
+  getVideo,
+  getCover,
 } from './handlers/getTitleHandlers';
 import {
   addCoverHandler,
@@ -64,6 +66,9 @@ app.post('/add-series/:userId', addSeriesHandler);
 app.post('/add-series/:userId/episode', upload.single('file'), addEpisodeHandler);
 app.post('/add-movie/:userId', upload.single('file'), addMovieHandler);
 app.put('/add-cover/:titleId', upload.single('file'), addCoverHandler);
+
+app.get('/video/:videoName', getVideo);
+app.get('/cover/:coverName', getCover);
 
 app.listen(port, () => {
   console.log(`[server] Server is running at http://localhost:${port}`);

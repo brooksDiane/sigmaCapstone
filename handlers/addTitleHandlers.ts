@@ -49,11 +49,10 @@ export async function addMovieHandler(req: Request, res: Response) {
 async function uploadFile(req: Request) {
   try {
     const file = req.file!;
-    const filePath = correctDirname() + file.path;
     const metadata = {
       mimetype: file.mimetype,
       size: file.size,
-      url: filePath,
+      url: 'video/' + file.filename,
     };
     return metadata;
   } catch (error) {
@@ -82,10 +81,9 @@ export async function addCoverHandler(req: Request, res: Response) {
 async function uploadCover(req: Request) {
   try {
     const file = req.file!;
-    const filePath = correctDirname() + file.path;
     const coverData = {
       mimetype: file.mimetype,
-      url: filePath,
+      url: 'cover/' + file.filename,
     };
 
     return coverData;
@@ -94,10 +92,6 @@ async function uploadCover(req: Request) {
   }
 }
 
-function correctDirname() {
-  let dirname = __dirname;
-  return dirname.slice(0, dirname.search('handlers'));
-}
 
 
 // // import fetch from 'node-fetch';

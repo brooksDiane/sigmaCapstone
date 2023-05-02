@@ -85,3 +85,12 @@ export async function getMovieHandler(req: Request, res: Response) {
 }
 
 export async function getOneSeries(req: Request, res: Response) { }
+
+
+export async function getVideo(req: Request, res: Response) {
+  res.sendFile('E:/Works/Capstone Project/Code/server/files/' + req.params.videoName);
+}
+
+export async function getCover(req: Request, res: Response) {
+  res.sendFile('E:/Works/Capstone Project/Code/server/files/' + req.params.coverName);
+}
