@@ -1,28 +1,7 @@
 import { Response, Request } from 'express';
-import { users, series, movies } from '../dbConnection';
-import { Movie, Series, Episode } from '../types';
+import { users, movies } from '../dbConnection';
+import { Movie } from '../types';
 import { ObjectId } from 'mongodb';
-import fs from 'fs';
-
-export async function addSeriesHandler(req: Request, res: Response) {
-  const newSeries: Series = req.body;
-  const insertResult = await series.insertOne(newSeries);
-  const updateResult = await users.updateOne(
-    { _id: new ObjectId(req.params.userId) },
-    { $push: { 'titles.series': insertResult.insertedId } }
-  );
-  res.json(updateResult);
-}
-
-export async function addEpisodeHandler(req: Request, res: Response) {
-  const newSeries: Series = req.body;
-  const insertResult = await series.insertOne(newSeries);
-  const updateResult = await users.updateOne(
-    { _id: new ObjectId(req.params.userId) },
-    { $push: { 'titles.series': insertResult.insertedId } }
-  );
-  res.json(updateResult);
-}
 
 export async function addMovieHandler(req: Request, res: Response) {
   console.log('Step 2: got the data');
@@ -91,36 +70,3 @@ async function uploadCover(req: Request) {
     console.error(error);
   }
 }
-
-
-
-// // import fetch from 'node-fetch';
-
-// async function uploadFile(req: Request) {
-//   const file = req.file!;
-//   const formData = new FormData();
-//   // const blob = new Blob([file]);
-//   formData.append('file', Buffer.from(file.buffer));
-//   // const arrayBuffer: ArrayBuffer = file.buffer.slice(
-//   //   file.byteOffset,
-//   //   file.byteOffset + file.byteLength
-//   // );
-//   const result = await fetch('https://pixeldrain.com/api/file/' + file.filename, {
-//     method: 'PUT',
-//     body: JSON.stringify(formData),
-//   });
-//   console.log(result);
-//   return result;
-// }
-
-// async function uploadFile(req: Request) {
-//   const file: Blob = req.file!;
-//   let xhr = new XMLHttpRequest();
-//   xhr.open(
-//     'PUT',
-//     'https://pixeldrain.com/api/file/' + encodeURIComponent(file.name),
-//     true
-//   );
-//   xhr.onreadystatechange = () => {};
-//   xhr.send(file);
-// }

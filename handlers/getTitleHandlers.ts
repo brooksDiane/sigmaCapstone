@@ -1,17 +1,8 @@
 import { Response, Request } from 'express';
-import { users, series, movies, findUserById } from '../dbConnection';
-import { Movie, Series, UserDocument } from '../types';
+import { movies, findUserById } from '../dbConnection';
+import { Movie, UserDocument } from '../types';
 import { ObjectId } from 'mongodb';
 
-export async function getSeriesHandler(req: Request, res: Response) {
-  const user = await findUserById(req.params.userId);
-  if (user === null) {
-    res.json({ error: 'No such user exists | Wrong user ID' });
-  } else {
-    const seriesArray = await findSeriesArray(user);
-    res.json(seriesArray);
-  }
-}
 
 export async function getMoviesHandler(req: Request, res: Response) {
   const user = await findUserById(req.params.userId);
@@ -23,34 +14,6 @@ export async function getMoviesHandler(req: Request, res: Response) {
   }
 }
 
-export async function getTitlesHandler(req: Request, res: Response) {
-  const user = await findUserById(req.params.userId);
-  if (user === null) {
-    res.json({ error: 'No such user exists | Wrong user ID' });
-  } else {
-    const titles = {
-      series: await findSeriesArray(user),
-      movies: await findMoviesArray(user),
-    };
-    res.json(titles);
-  }
-}
-
-async function findSeriesArray(user: UserDocument) {
-  const seriesArray = [];
-  for (const seriesId of user.titles.series) {
-    const returnedSeries = await series.findOne<Series>({
-      _id: new ObjectId(seriesId),
-    });
-    if (returnedSeries !== null) {
-      seriesArray.push({
-        id: seriesId,
-        title: returnedSeries.title,
-      });
-    }
-  }
-  return seriesArray;
-}
 
 async function findMoviesArray(user: UserDocument) {
   const moviesArray = [];
@@ -79,13 +42,23 @@ export async function getMovieHandler(req: Request, res: Response) {
     res.json({ error: 'No such user exists | Wrong user ID' });
   } else {
     console.log(req.params);
-    const result = await movies.findOne({ _id: new ObjectId(req.params.titleId) });
-    res.json(result);
+    const returnedMovie = await movies.findOne({ _id: new ObjectId(req.params.titleId) });
+    if (returnedMovie !== null) {
+      res.json({
+        id: req.params.titleId,
+        title: returnedMovie.title,
+        genres: returnedMovie.genres,
+        year: returnedMovie.year,
+        size: returnedMovie.size,
+        cover: returnedMovie.cover,
+        mimetype: returnedMovie.mimetype,
+        url: returnedMovie.url,
+      });
+    } else {
+      res.json({ error: 'No such title exists | Wrong title ID' });
+    }
   }
 }
-
-export async function getOneSeries(req: Request, res: Response) { }
-
 
 export async function getVideo(req: Request, res: Response) {
   res.sendFile('E:/Works/Capstone Project/Code/server/files/' + req.params.videoName);

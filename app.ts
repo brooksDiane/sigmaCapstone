@@ -3,21 +3,20 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectToDb } from './dbConnection';
 
-import { getUserHandler, signInHandler, signUpHandler } from './handlers/authHandlers';
+import {
+  getUserHandler,
+  signInHandler,
+  signUpHandler
+} from './handlers/authHandlers';
 import {
   getMoviesHandler,
-  getSeriesHandler,
-  getTitlesHandler,
   getMovieHandler,
-  getOneSeries,
   getVideo,
   getCover,
 } from './handlers/getTitleHandlers';
 import {
   addCoverHandler,
-  addEpisodeHandler,
   addMovieHandler,
-  addSeriesHandler,
 } from './handlers/addTitleHandlers';
 
 import path from 'path';
@@ -32,8 +31,6 @@ var storage = multer.diskStorage({
   },
 });
 
-// var storage = multer.memoryStorage();
-
 var upload = multer({ storage: storage });
 
 dotenv.config();
@@ -47,25 +44,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
-
 app.post('/sign-in', signInHandler);
 app.post('/sign-up', signUpHandler);
 app.get('/user/:userId', getUserHandler);
 
-app.get('/get-series/:userId', getSeriesHandler);
-app.get('/get-movies/:userId', getMoviesHandler);
-app.get('/get-titles/:userId', getTitlesHandler);
-
-app.get('/series/:userId/:titleId', getOneSeries);
-app.get('/movie/:userId/:titleId', getMovieHandler);
-
-app.post('/add-series/:userId', addSeriesHandler);
-app.post('/add-series/:userId/episode', upload.single('file'), addEpisodeHandler);
 app.post('/add-movie/:userId', upload.single('file'), addMovieHandler);
 app.put('/add-cover/:titleId', upload.single('file'), addCoverHandler);
+
+app.get('/get-movies/:userId', getMoviesHandler);
+app.get('/movie/:userId/:titleId', getMovieHandler);
 
 app.get('/video/:videoName', getVideo);
 app.get('/cover/:coverName', getCover);

@@ -15,7 +15,6 @@ export async function connectToDb() {
 
 const db = client.db('solibra');
 export const users = db.collection('users');
-export const series = db.collection('series');
 export const movies = db.collection('movies');
 
 export async function findUserById(id: string) {
